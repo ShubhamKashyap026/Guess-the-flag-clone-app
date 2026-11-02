@@ -13,16 +13,18 @@ struct ContentView: View {
     @State private var correntAnswer = Int.random(in: 0...2)
     @State private var showingScore = false
     @State private var scoreTitle = ""
+    @State private var userScore = 0
+    @State private var currentQuestionCount = 0
     
     // Body
     var body: some View {
         ZStack {
             
             // Linear Gradient
-//            LinearGradient(colors: [
-//                .blue, .black
-//            ], startPoint: .top, endPoint: .bottom)
-//            .ignoresSafeArea()
+            //            LinearGradient(colors: [
+            //                .blue, .black
+            //            ], startPoint: .top, endPoint: .bottom)
+            //            .ignoresSafeArea()
             
             // Radial Gradient
             RadialGradient(stops: [
@@ -36,15 +38,6 @@ struct ContentView: View {
                 Text("Guess the flag")
                     .font(.largeTitle.weight(.bold))
                     .foregroundStyle(.white)
-                
-                Spacer()
-                Spacer()
-                
-                Text("Score: ?")
-                    .font(.title.bold())
-                    .foregroundStyle(.white)
-                
-                Spacer()
                 
                 VStack(spacing: 15) {
                     VStack {
@@ -61,16 +54,16 @@ struct ContentView: View {
                             // Button was pressed
                             flagTapped(num)
                         } label: {
-                            Image(countries[correntAnswer])
+                            Image(countries[num])
                                 .clipShape(.capsule)
                                 .shadow(radius: 5)
                         }
-                        .alert("This is ", isPresented: $showingScore) {
+                        .alert(scoreTitle, isPresented: $showingScore) {
                             Button("OK") {
                                 askQuestions()
                             }
                         } message: {
-                            Text("Your score is: ")
+                            Text("Your score is: \(userScore)")
                         }
                     }
                 }
@@ -78,6 +71,16 @@ struct ContentView: View {
                 .padding(.vertical, 20)
                 .background(.regularMaterial)
                 .clipShape(.rect(cornerRadius: 20))
+                
+                Spacer()
+                Spacer()
+                
+                Text("Score: \(userScore)")
+                    .font(.title.bold())
+                    .foregroundStyle(.white)
+                
+                Spacer()
+                
             }
             .padding()
         }
@@ -86,10 +89,18 @@ struct ContentView: View {
     
     // Methods
     func flagTapped(_ number: Int) {
+        currentQuestionCount += 1
+        
         if number == correntAnswer {
             scoreTitle = "Correct"
+            userScore += 1
         } else {
-            scoreTitle = "Wrong"
+            scoreTitle = "Wrong! That's the flag of \(countries[correntAnswer])"
+            userScore -= 1
+        }
+                
+        if userScore < 0 {
+            userScore = 0
         }
         
         showingScore = true
@@ -98,6 +109,12 @@ struct ContentView: View {
     func askQuestions() {
         countries.shuffle()
         correntAnswer = Int.random(in: 0...2)
+        
+        if currentQuestionCount == 8 {
+            scoreTitle = "This game is finished"
+            currentQuestionCount = 1
+            userScore = 0
+        }
     }
 }
 
