@@ -17,13 +17,21 @@ struct ContentView: View {
     // Body
     var body: some View {
         ZStack {
-            Color.blue
-                .ignoresSafeArea()
+            
+            LinearGradient(colors: [
+                .blue, .black
+            ], startPoint: .top, endPoint: .bottom)
+            .ignoresSafeArea()
+            
+            
             
             VStack(spacing: 30) {
                 VStack {
                     Text("Tap the flag of")
+                        .font(.subheadline.weight(.heavy))
+                    
                     Text(countries[correntAnswer])
+                        .font(.largeTitle.weight(.semibold))
                 }
                 .foregroundStyle(.white)
                 
@@ -33,6 +41,8 @@ struct ContentView: View {
                         flagTapped(num)
                     } label: {
                         Image(countries[correntAnswer])
+                            .clipShape(.capsule)
+                            .shadow(radius: 5)
                     }
                     .alert("This is ", isPresented: $showingScore) {
                         Button("OK") {
