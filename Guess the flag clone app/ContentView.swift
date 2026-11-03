@@ -18,6 +18,7 @@ struct ContentView: View {
     
     // Body
     var body: some View {
+        
         ZStack {
             
             // Radial Gradient
@@ -26,6 +27,13 @@ struct ContentView: View {
                 .init(color: Color(red: 0.76, green: 0.15, blue: 0.26), location: 0.3)
             ], center: .top, startRadius: 200, endRadius: 800)
             .ignoresSafeArea()
+            
+            //            Rectangle()
+            //                .foregroundStyle(.red.gradient)
+            //                .ignoresSafeArea()
+            
+            //            Color.indigo
+            //                .ignoresSafeArea()
             
             VStack {
                 Spacer()
@@ -48,9 +56,7 @@ struct ContentView: View {
                             // Button was pressed
                             flagTapped(num)
                         } label: {
-                            Image(countries[num])
-                                .clipShape(.capsule)
-                                .shadow(radius: 5)
+                            FlagImage(imageName: countries[num])
                         }
                         .alert(scoreTitle, isPresented: $showingScore) {
                             Button("OK") {
@@ -89,10 +95,10 @@ struct ContentView: View {
             scoreTitle = "Correct"
             userScore += 1
         } else {
-            scoreTitle = "Wrong! That's the flag of \(countries[correntAnswer])"
+            scoreTitle = "Wrong! That's the flag of \(countries[number])"
             userScore -= 1
         }
-                
+        
         if userScore < 0 {
             userScore = 0
         }
@@ -112,6 +118,17 @@ struct ContentView: View {
     }
 }
 
+struct FlagImage: View {
+    var imageName: String
+    
+    var body: some View {
+        Image(imageName)
+            .clipShape(.capsule)
+            .shadow(radius: 5)
+    }
+}
+
 #Preview {
     ContentView()
 }
+
